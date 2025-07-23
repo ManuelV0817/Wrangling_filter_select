@@ -1,7 +1,7 @@
 ---
 title: "Data Wrangling - Part I"
 subtitle: "StatPREP R Workshops"
-author: "Your Name"
+author: "Manuel Villamil"
 output: html_document
 ---
 
@@ -68,13 +68,13 @@ movies %>%               # start with the full dataset, and then
 # Some simple practice and review for using filters
 
 # How many movies since 1965 have a run-time greater than 60 minutes?
-
+34476
 # Show all movies with more than 500 votes and an average rating of at least 9
-
+godfather, lord of the rings, shawshank redemption
 # How many PG-13 movies are in this dataset? Remember to use quotations ("") when filtering characters/strings
-
+1003
 # I want only movies with an MPAA rating over PG (there are no G movies). Hint: think about what you don't want and double check to see the filter completely worked.
-
+4380
 ```
 
 
@@ -114,6 +114,7 @@ movies %>%
   filter(str_detect(title, "Godzilla"))
 
 # Which Batman movies are in the dataset?
+8 movies
 ```
 
 > A note of caution: This method does not account for misentries and bad data. A mispelled word could cause an observation to escape your filter. This is only scratching the surface of what we can do with strings in R, [here is a nice chapter to get more info on handling strings](https://r4ds.had.co.nz/strings.html)
@@ -158,7 +159,8 @@ movies %>%
   drop_na(budget) %>%
   select(title, rating, budget)
 
-# Why doesn't the following code work?
+# Why doesn't the following code work? 
+you take the year out too early with te first command
 movies %>%
   select(title, rating, budget) %>%
   filter(year >= 2000) %>%
@@ -202,26 +204,44 @@ See if you can answer these questions:
 1. How many movies were released in 1995?
 
 ```{r}
-
+movies %>%
+  filter(year == 1995)
 ```
+
+1,248 movies were released in 1965.
 
 2. Which Comedies with an MPAA rating, over 120 minutes have a rating above 8?
 
 ```{r}
-
+movies %>%
+  filter(Comedy == 1 & mpaa >= "PG") %>% 
+  drop_na(mpaa) %>% 
+  filter(length >120) %>% 
+  filter(rating >8)
 ```
+
+The movies are Big Fish, Forrest Gump, The Incredibles, and O Homem Que Copiava.
 
 3. Create a subset of only Harry Potter movies with the title, rating, budget, and votes. Which movies are included in this data? Which is highest rated? Which has the most votes on imdb.com?
 
 ```{r}
-
+Harry_Potter <- movies %>%
+  filter(str_detect(title, "Harry Potter")) %>% 
+  select(title, rating, budget, votes) 
 ```
+
+The movies included are Harry Potter and the Chamber of Secrets, Harry Potter and the Prisoner of Azkaban, and Harry Potter and the Sorcerer's Stone. Harry Potter and the Prisoner of Azkaban has the highest rating at 7.8 and Harry Potter and the Sorcerer's Stone has the most votes  at 46741.
 
 4. What is the highest budget for a movie that is an Animation or Comedy with at least 100 votes?
 
 ```{r}
-
+movies %>% 
+  filter(Comedy == 1 |Animation == 1) %>% 
+  filter(votes >= 100) %>% 
+  arrange(desc(budget))
 ```
+
+The highest budget is 170000000 for the movie Wild Wild West.
 
 5. Is your favorite movie in the dataset? What other questions could you ask or answer using `filter()`, `select()`, and `arrange()`?
 
